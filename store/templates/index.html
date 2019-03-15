@@ -34,26 +34,49 @@
 </head>
 
 <body>
-    <!-- <div id='map'></div> -->
     <div class="container">
-        <div class="jumbotron" style="text-align: center">
-            <h1>Store</h1>
-            <p>Find your store!</p>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <h2>Look at all of the current stores!</h2>
-                <div id="plot"></div>
-                <div id="map"></div>
+        <div class="row">   
+            <div class="col-md-12 jumbotron text-center" style="text-align: center">
+                <h1>We can put a title here</h1>
+                <p>and a subheader here</p>
             </div>
         </div>
-
         <div class="row">
+            <div class="col-md-8">
+                <div class="panel panel-primary">
+                    <!-- <div id="plot"></div> -->
+                    <div id="map"></div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                    <div class="col-md-6">
+                      <div class="well">
+                        <h5>Dropdown Menu</h5>
+                      </div>
+                      <div id="dropdown" class="panel-body">
+                        <select id="selCity" onchange="optionChanged(this.value)"></select>
+                      </div>
+                      </div>
+                    <div class="col-md-6">
+                        <div id="jinja" class="panel panel-primary"> Jinja Stuff goes here if we still want it </div> 
+                    </div>
+                    <div class="col-md-12 panel panel-primary">
+                            <div id="chart1"> Some sort of Plotly Goes here this is jgklsdgj kfjg fkgj fkjg fkgj kf</div>
+                    </div>
+                  </div>
+                </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <div id="chart2" class="panel panel-primary"> We can put a long chart here, or I can split it up into two as needed</div>
+                </div>
+              </div>           
+        </div>
+
+        <!-- <div class="row">
             <div class="col-md-12">
                 <h2><a href="/send">Add your store here!</a></h2>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <!--D3 cdn-->
