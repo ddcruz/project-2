@@ -76,7 +76,7 @@ function resetHighlight(e) {
 }
 
 function zoomToFeature(e) {
-  map.fitBounds(e.target.getBounds());
+  // map.fitBounds(e.target.getBounds());
   drawCircles(e.sourceTarget.feature.properties.state_abbr)  
 }
 
@@ -137,10 +137,10 @@ function drawCircles(state_abbr) {
       L.circle(city.location, {
         fillOpacity: 1
         , color: 'white'
-        , fillColor: 'white'
+        , fillColor: getColor(city.density)
         , radius: city.density
       })
-      // .bindPopup("<h3>" + city.city + " " + city.density + "</h3>")
+      .bindPopup(city.city + ", " + city.state_abbr +  ":   " + city.density + " people per square km")
       .addTo(circlesGroup);
     }
     map.addLayer(circlesGroup)
