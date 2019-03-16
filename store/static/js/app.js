@@ -1,6 +1,5 @@
-
 var map = L.map('map').setView([37.8, -96], 4);
-
+var circlesGroup = L.featureGroup();
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
   maxZoom: 18,
@@ -78,6 +77,7 @@ function resetHighlight(e) {
 
 function zoomToFeature(e) {
   map.fitBounds(e.target.getBounds());
+  drawCircles(e.sourceTarget.feature.properties.state_abbr)  
 }
 
 function onEachFeature(feature, layer) {
@@ -120,37 +120,29 @@ legend.onAdd = function (map) {
 
 legend.addTo(map);
 
-console.log(API_KEY)
-console.log(statesData)
 
-/* data route */
-var url = "/api/store_data";
-d3.json(url).then(function(response) {
-  console.log(response)
-});
-//   // console.log(response);
+function drawCircles(state_abbr) {
+  
+  //remove any previously added circles
+  circlesGroup.clearLayers()
 
-//   var data = response;
+  /* data route */
+  var url = `/api/city_data/${state_abbr}`;
+  d3.json(url).then(function(cities) {
 
-//   var layout = {
-//     scope: "usa",
-//     title: "Stores",
-//     showlegend: false,
-//     height: 600,
-//           // width: 980,
-//     geo: {
-//       scope: "usa",
-//       projection: {
-//         type: "albers usa"
-//       },
-//       showland: true,
-//       landcolor: "rgb(217, 217, 217)",
-//       subunitwidth: 1,
-//       countrywidth: 1,
-//       subunitcolor: "rgb(255,255,255)",
-//       countrycolor: "rgb(255,255,255)"
-//     }
-//   };
-
-//   Plotly.newPlot("plot", data, layout);
-// });
+    // Loop through the cities data and create a circle for each store, 
+    // and use the density for the radius
+    for (var i = 0; i < cities.length; i++) {
+      var city = cities[i];
+      L.circle(city.location, {
+        fillOpacity: 1
+        , color: 'white'
+        , fillColor: 'white'
+        , radius: city.density
+      })
+      // .bindPopup("<h3>" + city.city + " " + city.density + "</h3>")
+      .addTo(circlesGroup);
+    }
+    map.addLayer(circlesGroup)
+  });
+}
