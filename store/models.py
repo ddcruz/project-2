@@ -27,8 +27,6 @@ class City_Demo(db.Model):
     average_household_size = db.Column(db.Float)
     median_income = db.Column(db.Float)
     household_income = db.Column(db.Float)
-    household_income = db.Column(db.Float)
-
 
     def __repr__(self):
         return '<City_Demo %r>' % (self.name)
@@ -42,7 +40,6 @@ class State_Demo(db.Model):
     median_age = db.Column(db.Float)
     average_household_size = db.Column(db.Float)
     median_income = db.Column(db.Float)
-    household_income = db.Column(db.Float)
     household_income = db.Column(db.Float)
 
     def __repr__(self):
