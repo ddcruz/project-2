@@ -122,10 +122,12 @@ legend.addTo(map);
 
 console.log(API_KEY)
 console.log(statesData)
-/* data route */
-// var url = "/api/store_data";
-// d3.json(url).then(function(response) {
 
+/* data route */
+var url = "/api/store_data";
+d3.json(url).then(function(response) {
+  console.log(response)
+});
 //   // console.log(response);
 
 //   var data = response;
