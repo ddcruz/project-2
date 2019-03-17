@@ -21,15 +21,30 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '') or "s
 # app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '')
 db = SQLAlchemy(app)
 
-from .models import City
+from .models import City, City_Demo, State_Demo
 
 # create route that renders index.html template
 @app.route("/")
 def home():
     return render_template("index.html")
 
-@app.route("/api/city_data/<state_abbr>")
+@app.route('/api/city_list/<state_abbr>')
 def cities(state_abbr):
+    sel = [
+        City_Demo.city
+    ]
+
+    results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).all()
+
+    city_data = [{
+        "city": result[0]
+        } for result in results
+    ]
+
+    return jsonify(city_data)
+
+@app.route("/api/city_data/<state_abbr>")
+def density_by_city_by_state(state_abbr):
     sel = [
         City.city
         , City.lat
@@ -40,7 +55,6 @@ def cities(state_abbr):
     ]
 
     results = db.session.query(*sel).filter(City.state_abbr == state_abbr).all()
-    # print(results[0])
     
     city_data = [{
         "city": result[0]
@@ -50,7 +64,6 @@ def cities(state_abbr):
         , "density": result[5]
     } for result in results]
 
-    # print(city_data[0])
     return jsonify(city_data)
 
 # if __name__ == "__main__":
