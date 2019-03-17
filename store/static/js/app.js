@@ -155,10 +155,13 @@ function drawCircles(state_abbr) {
 }
 
 function updateCityDropDown(state_abbr) {
-
+  //update the state label
   d3.select('#stateDropDownLabel').select('h5').text(`${state_abbr}`)
+
   // Grab a reference to the dropdown select element
   var selector = d3.select("#cityselector");
+
+  //clear any previous dropdown values
   selector.selectAll('option').remove()
   
   // Use the list of sample names to populate the select options
