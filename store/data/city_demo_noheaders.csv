@@ -1,4 +1,3 @@
-id,city,state,state_abbr,population,median_age,average_household_size,median_income,household_income,per_capita_income
 0,WESTWOOD,New Jersey,NJ,27300,44.2,2.76,52114,119748,59705
 1,WOODCLIFF LAKE,New Jersey,NJ,5868,46.7,2.81,59018,161250,82266
 2,WHARTON,New Jersey,NJ,10544,38.9,2.75,38218,79222,35589
