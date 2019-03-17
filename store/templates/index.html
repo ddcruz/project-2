@@ -15,7 +15,7 @@
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" 
     integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" 
     crossorigin=""></script>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<style>
         html, body {
             height: 100%;
@@ -34,8 +34,8 @@
         }
 
         #map { 
-            width: 600px; 
-            height: 400px; 
+            width: 747px; 
+            height: 500px; 
         }
 
         .info { 
@@ -72,24 +72,24 @@
         
     </style> 
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
 </head>
 
 <body>
     <div class="container">
         <div class="row">   
-            <div class="col-md-12 jumbotron text-center" style="text-align: center">
-                <h1>We can put a title here</h1>
-                <p>and a subheader here</p>
+            <div class="col-md-12 text-center" style="text-align: center">
+                <h1>Interactive US Demographic map</h1>
+                <!-- <p>and a subheader here</p> -->
             </div>
         </div>
         <div class="row">
-            <div class="col-md-7">
+            <div class="col-md-8">
                 <div class="panel panel-primary">
                     <div id="map"></div>
                 </div>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-4">
                     <div class="col-md-5">
                       <div class="well">
                         <h5>Dropdown Menu</h5>
