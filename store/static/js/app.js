@@ -67,14 +67,11 @@ function highlightFeature(e) {
   }
 
   info.update(layer.feature.properties);
-
-  // drawCircles(e.sourceTarget.feature.properties.state_abbr)
 }
 
 var geojson;
 
 function resetHighlight(e) {
-  console.log(e)
   geojson.resetStyle(e.target);
   info.update();
 }
@@ -82,6 +79,7 @@ function resetHighlight(e) {
 function zoomToFeature(e) {
   if (e.originalEvent.shiftKey === false) {
     map.fitBounds(e.target.getBounds());
+    updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
   }
 
   if (e.originalEvent.shiftKey === true) {
@@ -155,3 +153,32 @@ function drawCircles(state_abbr) {
     map.addLayer(circlesGroup)
   });
 }
+
+function updateCityDropDown(state_abbr) {
+
+  d3.select('#stateDropDownLabel').select('h5').text(`Select a city from ${state_abbr}`)
+  // Grab a reference to the dropdown select element
+  var selector = d3.select("#cityselector");
+  selector.selectAll('option').remove()
+  
+  // Use the list of sample names to populate the select options
+  d3.json(`api/city_list/${state_abbr}`).then((cities) => {
+    // console.log(cities)
+    cities.forEach((city) => {
+      selector
+        .append("option")
+        .text(city.city)
+        .property("value", city.city);
+    });
+    // // Use the first sample from the list to build the initial plots
+    // const firstSample = sampleNames[0];
+    // buildCharts(firstSample);
+    // buildMetadata(firstSample);
+  });
+}
+
+function init() {
+  updateCityDropDown('TX')
+}
+
+init()
