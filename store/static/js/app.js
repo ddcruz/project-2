@@ -52,6 +52,7 @@ function style(feature) {
 }
 
 function highlightFeature(e) {
+
   var layer = e.target;
 
   layer.setStyle({
@@ -66,25 +67,33 @@ function highlightFeature(e) {
   }
 
   info.update(layer.feature.properties);
+
+  // drawCircles(e.sourceTarget.feature.properties.state_abbr)
 }
 
 var geojson;
 
 function resetHighlight(e) {
+  console.log(e)
   geojson.resetStyle(e.target);
   info.update();
 }
 
 function zoomToFeature(e) {
-  // map.fitBounds(e.target.getBounds());
-  drawCircles(e.sourceTarget.feature.properties.state_abbr)  
+  if (e.originalEvent.shiftKey === false) {
+    map.fitBounds(e.target.getBounds());
+  }
+
+  if (e.originalEvent.shiftKey === true) {
+    drawCircles(e.sourceTarget.feature.properties.state_abbr)  
+  }
 }
 
 function onEachFeature(feature, layer) {
   layer.on({
     mouseover: highlightFeature,
     mouseout: resetHighlight,
-    click: zoomToFeature
+    click: zoomToFeature,
   });
 }
 
