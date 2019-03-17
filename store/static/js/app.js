@@ -156,7 +156,7 @@ function drawCircles(state_abbr) {
 
 function updateCityDropDown(state_abbr) {
 
-  d3.select('#stateDropDownLabel').select('h5').text(`Select a city from ${state_abbr}`)
+  d3.select('#stateDropDownLabel').select('h5').text(`${state_abbr}`)
   // Grab a reference to the dropdown select element
   var selector = d3.select("#cityselector");
   selector.selectAll('option').remove()
@@ -171,8 +171,7 @@ function updateCityDropDown(state_abbr) {
     });
 
     // Use the first city from the list to build the initial plots
-    buildCharts(cities[0].city); 
-    showCityInfo(cities[0].city); 
+    optionChanged(cities[0].city); 
   });
 }
 
@@ -184,6 +183,11 @@ function buildCharts(city) {
 function showCityInfo(city) {
   // Jinja here
   console.log(`showCityInfo for ${city}`)
+}
+
+function optionChanged(city) {
+  buildCharts(city); 
+  showCityInfo(city); 
 }
 
 function init() {
