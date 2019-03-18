@@ -102,6 +102,7 @@ geojson = L.geoJson(statesData, {
 
 map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
 
+
 var legend = L.control({position: 'bottomright'});
 
 legend.onAdd = function (map) {
@@ -155,7 +156,7 @@ function drawCircles(state_abbr) {
 
 function updateCityDropDown(state_abbr) {
   //update the state label
-  // d3.select('#stateDropDownLabel').select('h5').text(`${state_abbr}`)
+  d3.select('#stateDropDownLabel').select('h5').text(`${state_abbr}`)
 
   // Grab a reference to the dropdown select element
   var selector = d3.select("#cityselector");
@@ -172,18 +173,6 @@ function updateCityDropDown(state_abbr) {
         .property("value", city.city);
     });
 
-    $(document).ready(function() {
-      $('#cityselector')
-        .selectpicker({
-          title: `Select a city from ${state_abbr}`
-          , header: `Select a city from ${state_abbr}`
-        });
-    });
-
-    $('.cityselector').selectpicker('refresh');
-    // console.log($('.cityselector'))
-
-
     // Use the first city from the list to build the initial plots
     optionChanged(cities[0].city); 
   });
@@ -195,7 +184,41 @@ function buildCharts(city) {
 }
 
 function showCityInfo(city) {
-  // Jinja here
+// select state
+var state_abbr = d3.select('#stateDropDownLabel').select('h5').text()
+
+var url = `/api/demographics/${state_abbr}/${city}`
+
+var select_city = d3.select("#city-data")
+
+select_city.html("")
+
+d3.json(url).then(data=> {
+  console.log(data)
+  var sortedData = {
+      city: data.city,
+      state: data.state,
+      population: data.population,
+      median_age: data.median_age,
+      avgerage_household_size: data.avgerage_household_size,
+      median_income: data.median_income,
+      household_income: data.household_income,
+      per_capita_income: data.per_capita_income
+    }
+  
+  // reformat keys: replace "_" with " " + capitalize first letter of each word
+  function formatText(string) {
+    var correctText = string.replace(/_/g,' ').split(' ').map(x=> x.charAt(0).toUpperCase() + x.slice(1)).join(' ')
+    return correctText
+  }
+
+
+  Object.entries(sortedData).forEach(([key, value])=> {
+    var p = select_city.append("p")
+    p.text(`${formatText(key)}: ${value}`)
+  })
+})
+
   console.log(`showCityInfo for ${city}`)
 }
 
