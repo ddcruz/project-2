@@ -198,7 +198,7 @@ d3.json(url).then(data=> {
   var sortedData = {
       city: data.city,
       state: data.state,
-      population: data.population,
+      population: data.population, 
       median_age: data.median_age,
       avgerage_household_size: data.avgerage_household_size,
       median_income: data.median_income,
