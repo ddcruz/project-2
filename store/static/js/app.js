@@ -52,7 +52,7 @@ function style(feature) {
 }
 
 function highlightFeature(e) {
-
+  console.log('mouseover: highlightFeature')
   var layer = e.target;
 
   layer.setStyle({
@@ -72,15 +72,17 @@ function highlightFeature(e) {
 var geojson;
 
 function resetHighlight(e) {
-  geojson.resetStyle(e.target);
-  info.update();
+  console.log('mouseout: resetHighlight')
+    geojson.resetStyle(e.target);
+    info.update();
 }
 
 function zoomToFeature(e) {
-  if (e.originalEvent.shiftKey === false) {
-    map.fitBounds(e.target.getBounds());
-    updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
-  }
+  console.log('mouseclick: zoomToFeature')
+    if (e.originalEvent.shiftKey === false) {
+      map.fitBounds(e.target.getBounds());
+      updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
+    }
 
   if (e.originalEvent.shiftKey === true) {
     drawCircles(e.sourceTarget.feature.properties.state_abbr)  
@@ -172,17 +174,15 @@ function updateCityDropDown(state_abbr) {
         .property("value", city.city);
     });
 
-    $(document).ready(function() {
-      $('#cityselector')
-        .selectpicker({
-          title: `Select a city from ${state_abbr}`
-          , header: `Select a city from ${state_abbr}`
-        });
-    });
+      // update the title and header of the citypicker downdown
+    $('#cityselector')
+      .selectpicker({
+        title: `Select a city from ${state_abbr}`
+        , header: `Select a city from ${state_abbr}`
+      });
 
+    // re-rendder the slectpicker dropdown with the data values
     $('.cityselector').selectpicker('refresh');
-    // console.log($('.cityselector'))
-
 
     // Use the first city from the list to build the initial plots
     optionChanged(cities[0].city); 
