@@ -102,7 +102,6 @@ geojson = L.geoJson(statesData, {
 
 map.attributionControl.addAttribution('Population data &copy; <a href="http://census.gov/">US Census Bureau</a>');
 
-
 var legend = L.control({position: 'bottomright'});
 
 legend.onAdd = function (map) {
@@ -156,7 +155,7 @@ function drawCircles(state_abbr) {
 
 function updateCityDropDown(state_abbr) {
   //update the state label
-  d3.select('#stateDropDownLabel').select('h5').text(`${state_abbr}`)
+  // d3.select('#stateDropDownLabel').select('h5').text(`${state_abbr}`)
 
   // Grab a reference to the dropdown select element
   var selector = d3.select("#cityselector");
@@ -172,6 +171,18 @@ function updateCityDropDown(state_abbr) {
         .text(city.city)
         .property("value", city.city);
     });
+
+    $(document).ready(function() {
+      $('#cityselector')
+        .selectpicker({
+          title: `Select a city from ${state_abbr}`
+          , header: `Select a city from ${state_abbr}`
+        });
+    });
+
+    $('.cityselector').selectpicker('refresh');
+    // console.log($('.cityselector'))
+
 
     // Use the first city from the list to build the initial plots
     optionChanged(cities[0].city); 
