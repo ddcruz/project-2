@@ -38,6 +38,7 @@ class State_Demo(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     state = db.Column(db.String(64))
+    state_abbr = db.Column(db.String(64))
     population = db.Column(db.Float)
     median_age = db.Column(db.Float)
     average_household_size = db.Column(db.Float)
