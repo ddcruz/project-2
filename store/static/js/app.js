@@ -52,7 +52,7 @@ function style(feature) {
 }
 
 function highlightFeature(e) {
-  console.log('mouseover: highlightFeature')
+  // console.log('mouseover: highlightFeature')
   var layer = e.target;
 
   layer.setStyle({
@@ -72,13 +72,12 @@ function highlightFeature(e) {
 var geojson;
 
 function resetHighlight(e) {
-  console.log('mouseout: resetHighlight')
+  // console.log('mouseout: resetHighlight')
     geojson.resetStyle(e.target);
     info.update();
 }
 
 function zoomToFeature(e) {
-  console.log('mouseclick: zoomToFeature')
     if (e.originalEvent.shiftKey === false) {
       map.fitBounds(e.target.getBounds());
       updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
@@ -158,7 +157,8 @@ function drawCircles(state_abbr) {
 
 function updateCityDropDown(state_abbr) {
   //update the state label
-  d3.select('#stateDropDownLabel').select('h5').text(`${state_abbr}`)
+  d3.select('#stateDropDownLabel').select('h5').text(`Select a city in ${state_abbr} from the list below:`)
+  d3.select('#stateDropDownLabel').select('h4').text(`${state_abbr}`)
 
   // Grab a reference to the dropdown select element
   var selector = d3.select("#cityselector");
@@ -186,42 +186,41 @@ function buildCharts(city) {
 }
 
 function showCityInfo(city) {
-// select state
-var state_abbr = d3.select('#stateDropDownLabel').select('h5').text()
+  // select state
+  var state_abbr = d3.select('#stateDropDownLabel').select('h4').text()
 
-var url = `/api/demographics/${state_abbr}/${city}`
+  var url = `/api/demographics/${state_abbr}/${city}`
 
-var select_city = d3.select("#city-data")
+  var select_city = d3.select("#city-data")
 
-select_city.html("")
+  select_city.html("")
 
-d3.json(url).then(data=> {
-  console.log(data)
-  var sortedData = {
-      city: data.city,
-      state: data.state,
-      population: data.population, 
-      median_age: data.median_age,
-      avgerage_household_size: data.avgerage_household_size,
-      median_income: data.median_income,
-      household_income: data.household_income,
-      per_capita_income: data.per_capita_income
+  d3.json(url).then(data=> {
+    // console.log(data)
+    var sortedData = {
+        city: data.city,
+        state: data.state,
+        population: data.population, 
+        median_age: data.median_age,
+        avgerage_household_size: data.avgerage_household_size,
+        median_income: data.median_income,
+        household_income: data.household_income,
+        per_capita_income: data.per_capita_income
+      }
+    
+    // reformat keys: replace "_" with " " + capitalize first letter of each word
+    function formatText(string) {
+      var correctText = string.replace(/_/g,' ').split(' ').map(x=> x.charAt(0).toUpperCase() + x.slice(1)).join(' ')
+      return correctText
     }
-  
-  // reformat keys: replace "_" with " " + capitalize first letter of each word
-  function formatText(string) {
-    var correctText = string.replace(/_/g,' ').split(' ').map(x=> x.charAt(0).toUpperCase() + x.slice(1)).join(' ')
-    return correctText
-  }
 
 
-  Object.entries(sortedData).forEach(([key, value])=> {
-    var p = select_city.append("p")
-    p.text(`${formatText(key)}: ${value}`)
+    Object.entries(sortedData).forEach(([key, value])=> {
+      var p = select_city.append("p")
+      p.text(`${formatText(key)}: ${value}`)
+    })
   })
-})
 
-  console.log(`showCityInfo for ${city}`)
 }
 
 function optionChanged(city) {

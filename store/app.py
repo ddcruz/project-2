@@ -81,7 +81,7 @@ def city_demo(state_abbr, city):
     ]
 
     results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).filter(City_Demo.city == city).all()
-    print(results)
+    # print(results)
     city_demographics = {
         "city": results[0][0],
         "state": results[0][1],
@@ -93,7 +93,7 @@ def city_demo(state_abbr, city):
         "household_income": results[0][7],
         "per_capita_income": results[0][8]
     }
-    print(city_demographics)
+    # print(city_demographics)
     return jsonify(city_demographics)
 
 @app.route("/api/demographics/<state_abbr>")
