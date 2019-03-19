@@ -52,7 +52,7 @@ function style(feature) {
 }
 
 function highlightFeature(e) {
-
+  console.log('mouseover: highlightFeature')
   var layer = e.target;
 
   layer.setStyle({
@@ -72,15 +72,17 @@ function highlightFeature(e) {
 var geojson;
 
 function resetHighlight(e) {
-  geojson.resetStyle(e.target);
-  info.update();
+  console.log('mouseout: resetHighlight')
+    geojson.resetStyle(e.target);
+    info.update();
 }
 
 function zoomToFeature(e) {
-  if (e.originalEvent.shiftKey === false) {
-    map.fitBounds(e.target.getBounds());
-    updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
-  }
+  console.log('mouseclick: zoomToFeature')
+    if (e.originalEvent.shiftKey === false) {
+      map.fitBounds(e.target.getBounds());
+      updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
+    }
 
   if (e.originalEvent.shiftKey === true) {
     drawCircles(e.sourceTarget.feature.properties.state_abbr)  
