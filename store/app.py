@@ -124,5 +124,64 @@ def state_demo(state_abbr):
 
     return jsonify(state_demographics)
 
+
+@app.route("/api/plot/<state_abbr>")
+def plot(state_abbr):
+    sel = [
+        City_Demo.city
+        , City_Demo.state_abbr
+        , City_Demo.median_age
+        , City_Demo.median_income
+    ]
+    results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).all()
+    
+    cities = []
+    med_age = []
+    med_income = []
+
+    for city in results:
+        cities.append(city[0])
+        med_age.append(city[2])
+        med_income.append(city[3])
+
+    results_json = {
+        "cities": cities,
+        "med_age": med_age,
+        "med_income": med_income
+     }
+
+    return jsonify(results_json)
+
+
+@app.route("/api/pie/<state_abbr>")
+def pie(state_abbr):
+    sel = [
+        City_Demo.city
+        , City_Demo.state_abbr
+        , City_Demo.median_age
+        , City_Demo.median_income
+        , City_Demo.population
+    ]
+    results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).order_by(City_Demo.population.desc()).all()
+    
+    top_10 = results[0:10]
+
+    cities = []
+    population = []
+    age = []
+
+    for city in top_10:
+        cities.append(city[0])
+        population.append(city[4])
+        age.append(city[2])
+
+    results_json = {
+        "cities": cities,
+        "population": population,
+        "age": age
+     }
+
+    return jsonify(results_json)
+
 # if __name__ == "__main__":
 app.run(debug=True)
