@@ -86,6 +86,8 @@ function zoomToFeature(e) {
   if (e.originalEvent.shiftKey === true) {
     drawCircles(e.sourceTarget.feature.properties.state_abbr)  
   }
+
+  buildPie(e.sourceTarget.feature.properties.state_abbr)
 }
 
 function onEachFeature(feature, layer) {
@@ -178,12 +180,79 @@ function updateCityDropDown(state_abbr) {
     // Use the first city from the list to build the initial plots
     optionChanged(cities[0].city); 
   });
+   buildCharts(state_abbr);
+   buildPie(state_abbr)
 }
 
-function buildCharts(city) {
-  //ploty charts go here
-  console.log(`buildCharts for ${city}`)
-}
+function buildCharts(state_abbr) {
+  var state_abbr = d3.select('#stateDropDownLabel').select('h4').text()
+
+  var url = `/api/plot/${state_abbr}`
+
+  d3.json(url).then(data=> {
+    // console.log(data)
+    var trace1 = {
+      'x': data.med_age,
+      'y': data.med_income,
+      'text': data.cities,
+      'mode': 'markers',
+      'marker': {
+        // size: data.med_age,
+        // color: 'blue'
+      }
+    };
+    var layout1 = {
+        title: {
+          text:`${state_abbr} Median Age vs Median Income`,
+          font: {
+            size: 24
+          }
+        },
+        height: 700,
+        width: 1100,
+        xaxis: {
+          title: {
+            text: 'Median Age (Years)'
+          }
+        },
+        yaxis: {
+          title: {
+            text: 'Median Household Income (US Dollars)'
+          }
+        }
+      }
+      Plotly.newPlot("chart2", [trace1], layout1)
+  });
+};
+
+function buildPie(state_abbr) {
+  // var state_abbr = d3.select('#stateDropDownLabel').select('h4').text()
+  console.log(state_abbr)
+  var url = `/api/pie/${state_abbr}`
+
+  d3.json(url).then(data=> {
+    // console.log(data)
+    var trace1 = {
+      values: data.population,
+      labels: data.cities,
+      type: 'pie'
+    };
+    var layout1 = {
+        title: {
+          text:`${state_abbr} Top 10 Population`,
+          font: {
+            size: 14
+          }
+        },
+        height: 400,
+        width: 400,
+      }
+      Plotly.newPlot("chart1", [trace1], layout1)
+  });
+};
+
+
+
 
 function showCityInfo(city) {
   // select state
@@ -224,9 +293,10 @@ function showCityInfo(city) {
 }
 
 function optionChanged(city) {
-  buildCharts(city); 
+  // buildCharts(city); 
   showCityInfo(city); 
 }
+
 
 function init() {
   updateCityDropDown('TX')

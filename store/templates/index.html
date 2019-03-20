@@ -20,7 +20,7 @@
 
 <body>
     <div class="container">
-        <div class="row">   
+        <div class="row">
             <div class="col-md-12 text-center" style="text-align: center">
                 <h1>US Demographics Interactive Visualization</h1>
                 <!-- <p>and a subheader here</p> -->
@@ -33,108 +33,63 @@
                 </div>
             </div>
             <div class="col-md-4">
-                    <!-- <div class="col-md-6">
-                        <div class="well" id="stateDropDownLabel">
-                            <h5>Select City:</h5>
-                            <select id="cityselector" onchange="optionChanged(this.value)"></select>
-                        </div>
-                    </div> -->
-                    <div class="col-md-12">
+ 
+                <!-- <div class="col-md-12 row">
                         <div class="well" id="stateDropDownLabel">
                             <h5>Select City:</h5>
                             <h4 style="display:none">TX:</h4>
                             <select id="cityselector" onchange="optionChanged(this.value)"></select>
                             <div id="city-data"></div>
                         </div>
-                    </div>
-                    <!-- <div class="col-md-6" id="city-data"></div> -->
-                    <!-- <div class="col-md-12">
-                        <div id="city_info" class="panel panel-primary">  
-                            <table id="info-table" class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th class="well" id="stateDropDownLabel">
-                                            <h5>Select City:</h5>
-                                            <select id="cityselector" onchange="optionChanged(this.value)"></select>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Population</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Median Age</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Avg. Household Size</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Median Income</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Household Income</td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Per Capita Income</td>
-                                        <td></td>
-                                    </tr>
-                                </tbody>
-                            </table> -->
-                        </div> 
-                    </div>
-                    <div class="col-md-12 panel panel-primary">
-                            <div id="chart1"> Some sort of Plotly Goes here this is jgklsdgj kfjg fkgj fkjg fkgj kf</div>
-                    </div>
+                </div> -->
+                
+                        <div id="chart1"></div>
+                    
                   </div>
                 </div>
+ 
               <div class="row">
                 <div class="col-md-12">
-                  <div id="chart2" class="panel panel-primary"> We can put a long chart here, or I can split it up into two as needed</div>
+                  <div id="chart2" class="panel panel-primary"> </div>
                 </div>
-              </div>           
+              </div>
         </div>
-
+ 
         <!-- <div class="row">
             <div class="col-md-12">
                 <h2><a href="/send">Add your store here!</a></h2>
             </div>
         </div> -->
-    </div>
-
+ 
+ 
     <!--D3 cdn-->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
  
     <!-- Leaflet-Choropleth JavaScript -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/choropleth.js') }}"></script>
-   
+ 
     <!-- Our CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <!-- <link rel="stylesheet" href="./../static/css/style.css"> -->
-
+ 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <!-- <script src="{{ url_for('static', filename='js/app.js') }}"></script> -->
-
+ 
     <!-- statesData -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/us-states.js') }}"></script>
     <!-- <script type="text/javascript" src="./../static/js/us-states.js"></script> -->
-
+ 
     <!-- API key -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/config.js') }}"></script>
     <!-- <script type="text/javascript" src="./../static/js/config.js"></script> -->
-
+ 
     <!-- Our JS -->
-    <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>  
+    <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
     <!-- <script type="text/javascript" src="./../static/js/app.js"></script>  -->
-    
-  
-   
-</body>
+ 
+ 
+ 
+ </body>
 
 </html>
