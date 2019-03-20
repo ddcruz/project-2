@@ -15,6 +15,8 @@
     <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" 
     integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" 
     crossorigin=""></script>
+
+    <!-- bootstrap -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 </head>
 
@@ -34,36 +36,19 @@
             </div>
             <div class="col-md-4">
  
-                <!-- <div class="col-md-12 row">
-                        <div class="well" id="stateDropDownLabel">
-                            <h5>Select City:</h5>
-                            <h4 style="display:none">TX:</h4>
-                            <select id="cityselector" onchange="optionChanged(this.value)"></select>
-                            <div id="city-data"></div>
-                        </div>
-                </div> -->
-                
-                        <div id="chart1"></div>
+                <div id="chart1"></div>
                     
-                  </div>
-                </div>
- 
-              <div class="row">
-                <div class="col-md-12">
-                  <div id="chart2" class="panel panel-primary"> </div>
-                </div>
-              </div>
+            </div>
         </div>
  
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-md-12">
-                <h2><a href="/send">Add your store here!</a></h2>
+                <div id="chart2" class="panel panel-primary"> </div>
             </div>
-        </div> -->
- 
+        </div>
+    </div>
  
     <!--D3 cdn-->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.5.0/d3.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.5.0/d3.min.js"></script>
  
     <!-- Leaflet-Choropleth JavaScript -->
@@ -71,22 +56,21 @@
  
     <!-- Our CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <!-- <link rel="stylesheet" href="./../static/css/style.css"> -->
  
+    <!-- plotly  -->
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <!-- <script src="{{ url_for('static', filename='js/app.js') }}"></script> -->
+
+    <!-- rainbowvis -->
+    <script src="{{ url_for('static', filename='js/rainbowvis.js') }}"></script>
  
     <!-- statesData -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/us-states.js') }}"></script>
-    <!-- <script type="text/javascript" src="./../static/js/us-states.js"></script> -->
  
     <!-- API key -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/config.js') }}"></script>
-    <!-- <script type="text/javascript" src="./../static/js/config.js"></script> -->
  
     <!-- Our JS -->
     <script type="text/javascript" src="{{ url_for('static', filename='js/app.js') }}"></script>
-    <!-- <script type="text/javascript" src="./../static/js/app.js"></script>  -->
  
  
  

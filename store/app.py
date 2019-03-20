@@ -27,20 +27,20 @@ from .models import City, City_Demo, State_Demo
 def home():
     return render_template("index.html")
 
-@app.route('/api/city_list/<state_abbr>')
-def cities(state_abbr):
-    sel = [
-        City_Demo.city
-    ]
+# @app.route('/api/city_list/<state_abbr>')
+# def cities(state_abbr):
+#     sel = [
+#         City_Demo.city
+#     ]
 
-    results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).all()
+#     results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).all()
 
-    city_data = [{
-        "city": result[0]
-        } for result in results
-    ]
+#     city_data = [{
+#         "city": result[0]
+#         } for result in results
+#     ]
 
-    return jsonify(city_data)
+#     return jsonify(city_data)
 
 @app.route("/api/city_data/<state_abbr>")
 def density_by_city_by_state(state_abbr):
@@ -50,7 +50,6 @@ def density_by_city_by_state(state_abbr):
     INNER JOIN city_demographics cd 
     ON c.state_abbr = cd.state_abbr AND UPPER(c.city) = cd.city
     AND c.state_abbr = '{state_abbr}';"""
-    print(SQLStmt)
     results = db.engine.execute(SQLStmt)
     
     city_data = [{
@@ -67,45 +66,38 @@ def density_by_city_by_state(state_abbr):
     
     return jsonify(city_data)
 
-@app.route("/api/demographics/<state_abbr>")
-def state_demo(state_abbr):
-    sel = [
-        State_Demo.city
-        , State_Demo.state
-        , State_Demo.state_abbr
-        , State_Demo.population
-        , State_Demo.median_age
-        , State_Demo.average_household_size
-        , State_Demo.median_income
-        , State_Demo.household_income
-        , State_Demo.per_capita_income
-    ]
-    results = db.session.query(*sel).filter(State_Demo.state_abbr == state_abbr).all()
+# @app.route("/api/demographics/<state_abbr>")
+# def state_demo(state_abbr):
+#     sel = [
+#         State_Demo.city
+#         , State_Demo.state
+#         , State_Demo.state_abbr
+#         , State_Demo.population
+#         , State_Demo.median_age
+#         , State_Demo.average_household_size
+#         , State_Demo.median_income
+#         , State_Demo.household_income
+#         , State_Demo.per_capita_income
+#     ]
+#     results = db.session.query(*sel).filter(State_Demo.state_abbr == state_abbr).all()
 
-    state_demographics = {
-        "state": results[0][1],
-        # "state_abbr": results[0][2],
-        "population": results[0][3],
-        "median_age": results[0][4],
-        "avgerage_household_size": results[0][5],
-        "median_income": results[0][6],
-        "household_income": results[0][7],
-        "per_capita_income": results[0][8]
-    }
+#     state_demographics = {
+#         "state": results[0][1],
+#         # "state_abbr": results[0][2],
+#         "population": results[0][3],
+#         "median_age": results[0][4],
+#         "avgerage_household_size": results[0][5],
+#         "median_income": results[0][6],
+#         "household_income": results[0][7],
+#         "per_capita_income": results[0][8]
+#     }
 
-    return jsonify(state_demographics)
+#     return jsonify(state_demographics)
 
 
 @app.route("/api/plot/<state_abbr>")
 def plot(state_abbr):
-    # sel = [
-    #     City_Demo.city
-    #     , City_Demo.state_abbr
-    #     , City_Demo.median_age
-    #     , City_Demo.median_income
-    # ]
-    # results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).all()
-    
+
     SQLStmt = f"""SELECT c.city, c.state_abbr, cd.median_age, cd.median_income 
     FROM city c 
     INNER JOIN city_demographics cd 
@@ -157,7 +149,6 @@ def pie(state_abbr):
         "density": density,
      }
 
-    print(results_json)
     return jsonify(results_json)
 
 # if __name__ == "__main__":

@@ -1,5 +1,24 @@
+//use the RainbowVis JS library to create a gradient color list
+function buildColors() {
+    var numberOfItems = 8;
+    var rainbow = new Rainbow(); 
+    var cl = []
+    rainbow.setNumberRange(1, numberOfItems);
+    rainbow.setSpectrum('gold', 'red');
+    var s = '';
+    for (var i = 1; i <= numberOfItems; i++) {
+        var hexColour = rainbow.colourAt(i);
+        cl.push('#' + hexColour)
+    }
+    return cl
+}
+
+var colorList = buildColors();
+
 var map = L.map('map').setView([37.8, -96], 4);
 var circlesGroup = L.featureGroup();
+
+
 
 L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
   maxZoom: 18,
@@ -29,15 +48,26 @@ info.addTo(map);
 
 
 // get color depending on population density value
+// function getColor(d) {
+//   return d > 1000 ? '#800026' :
+//       d > 500  ? '#BD0026' :
+//       d > 200  ? '#E31A1C' :
+//       d > 100  ? '#FC4E2A' :
+//       d > 50   ? '#FD8D3C' :
+//       d > 20   ? '#FEB24C' :
+//       d > 10   ? '#FED976' :
+//             '#FFEDA0';
+// }
+
 function getColor(d) {
-  return d > 1000 ? '#800026' :
-      d > 500  ? '#BD0026' :
-      d > 200  ? '#E31A1C' :
-      d > 100  ? '#FC4E2A' :
-      d > 50   ? '#FD8D3C' :
-      d > 20   ? '#FEB24C' :
-      d > 10   ? '#FED976' :
-            '#FFEDA0';
+  return d > 1000 ? colorList[7] :
+      d > 500  ? colorList[6] :
+      d > 200  ? colorList[5] :
+      d > 100  ? colorList[4] :
+      d > 50   ? colorList[3] :
+      d > 20   ? colorList[2] :
+      d > 10   ? colorList[1] :
+            colorList[0];
 }
 
 function style(feature) {
@@ -78,7 +108,6 @@ function resetHighlight(e) {
 
 function zoomToFeature(e) {
     map.fitBounds(e.target.getBounds());
-    // updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
     drawCircles(e.sourceTarget.feature.properties.state_abbr) 
     buildCharts(e.sourceTarget.feature.properties.state_abbr)
     buildPie(e.sourceTarget.feature.properties.state_abbr)
@@ -130,16 +159,16 @@ function drawCircles(state_abbr) {
   //remove any previously added circles
   circlesGroup.clearLayers()
 
+  //function that uses regext to format a number with commas
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-  
 
   /* data route*/
   d3.json(`/api/city_data/${state_abbr}`).then(function(cities) {
 
-    // Loop through the cities data and create a circle for each store, 
-    // and use the density for the radius
+    // Loop through the cities data and create a circle for each city, 
+    // and use the density as the radius of the circle and the color gradient
     for (var i = 0; i < cities.length; i++) {
       var city = cities[i];
       L.circle(city.location, {
@@ -150,7 +179,7 @@ function drawCircles(state_abbr) {
       })
       .bindPopup("<b>" + city.city + ", " + city.state_abbr + "</b>" +
         "<br>" + 
-        "<strong>Pop. Density: </strong>" + city.density.toFixed(2) + " people / mi<sup>2</sup>" +
+        "<strong>Pop. Density: </strong>" + numberWithCommas(city.density.toFixed(2)) + " people / mi<sup>2</sup>" +
         "<br>" +
         "<strong>Pop.: </strong>" + numberWithCommas(city.population) +
         "<br>" +
@@ -195,14 +224,13 @@ function buildCharts(state_abbr) {
   var url = `/api/plot/${state_abbr}`
 
   d3.json(url).then(data=> {
-    // console.log(data)
     var trace1 = {
       'x': data.med_age,
       'y': data.med_income,
       'text': data.cities,
       'mode': 'markers',
       'marker': {
-        size: data.med_income/10000,
+        // size: data.med_income/10000,
         // color: 'blue'
       }
     };
@@ -252,6 +280,7 @@ function buildPie(state_abbr) {
       Plotly.newPlot("chart1", [trace1], layout1)
   });
 };
+
 
 function init() {
   buildPie('TX')
