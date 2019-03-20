@@ -61,7 +61,7 @@ def density_by_city_by_state(state_abbr):
         , "location": [result[1], result[2]]
         , "state": result[3]
         , "state_abbr": result[4]
-        , "density": result[5]
+        , "density": result[5]/2.56
     } for result in results]
 
     return jsonify(city_data)
@@ -155,32 +155,29 @@ def plot(state_abbr):
 
 @app.route("/api/pie/<state_abbr>")
 def pie(state_abbr):
+    # print(state_abbr)
     sel = [
-        City_Demo.city
-        , City_Demo.state_abbr
-        , City_Demo.median_age
-        , City_Demo.median_income
-        , City_Demo.population
+        City.city
+        , City.state_abbr
+        , City.density
     ]
-    results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).order_by(City_Demo.population.desc()).all()
-    
+    results = db.session.query(*sel).filter(City.state_abbr == state_abbr).order_by(City.density.desc()).all()
+
     top_10 = results[0:10]
 
     cities = []
-    population = []
-    age = []
-
+    density = []
+     
     for city in top_10:
         cities.append(city[0])
-        population.append(city[4])
-        age.append(city[2])
+        density.append(city[2]/2.56)
 
     results_json = {
         "cities": cities,
-        "population": population,
-        "age": age
+        "density": density,
      }
 
+    print(results_json)
     return jsonify(results_json)
 
 # if __name__ == "__main__":

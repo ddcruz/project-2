@@ -67,6 +67,7 @@ function highlightFeature(e) {
   }
 
   info.update(layer.feature.properties);
+  circlesGroup.bringToFront();
 }
 
 var geojson;
@@ -78,16 +79,11 @@ function resetHighlight(e) {
 }
 
 function zoomToFeature(e) {
-    if (e.originalEvent.shiftKey === false) {
-      map.fitBounds(e.target.getBounds());
-      updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
-    }
-
-  if (e.originalEvent.shiftKey === true) {
-    drawCircles(e.sourceTarget.feature.properties.state_abbr)  
-  }
-
-  buildPie(e.sourceTarget.feature.properties.state_abbr)
+    map.fitBounds(e.target.getBounds());
+    updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
+    drawCircles(e.sourceTarget.feature.properties.state_abbr) 
+    buildCharts(e.sourceTarget.feature.properties.state_abbr)
+    buildPie(e.sourceTarget.feature.properties.state_abbr)
 }
 
 function onEachFeature(feature, layer) {
@@ -150,7 +146,7 @@ function drawCircles(state_abbr) {
         , fillColor: getColor(city.density)
         , radius: city.density
       })
-      .bindPopup(city.city + ", " + city.state_abbr +  ":   " + city.density + " people per square km")
+      .bindPopup(city.city + ", " + city.state_abbr +  ":   " + city.density + " people / mi<sup>2</sup>")
       .addTo(circlesGroup);
     }
     map.addLayer(circlesGroup)
@@ -180,12 +176,11 @@ function updateCityDropDown(state_abbr) {
     // Use the first city from the list to build the initial plots
     optionChanged(cities[0].city); 
   });
-   buildCharts(state_abbr);
-   buildPie(state_abbr)
 }
 
+
 function buildCharts(state_abbr) {
-  var state_abbr = d3.select('#stateDropDownLabel').select('h4').text()
+  // var state_abbr = d3.select('#stateDropDownLabel').select('h4').text()
 
   var url = `/api/plot/${state_abbr}`
 
@@ -226,33 +221,28 @@ function buildCharts(state_abbr) {
 };
 
 function buildPie(state_abbr) {
-  // var state_abbr = d3.select('#stateDropDownLabel').select('h4').text()
-  console.log(state_abbr)
+  // console.log(`build pie for ${state_abbr}`)
   var url = `/api/pie/${state_abbr}`
 
   d3.json(url).then(data=> {
-    // console.log(data)
     var trace1 = {
-      values: data.population,
+      values: data.density,
       labels: data.cities,
       type: 'pie'
     };
     var layout1 = {
         title: {
-          text:`${state_abbr} Top 10 Population`,
+          text:`<b>${state_abbr} Top 10 cities by population density per m<sup>2</sup></b>`,
           font: {
             size: 14
           }
         },
-        height: 400,
-        width: 400,
+        height: 550,
+        width: 550,
       }
       Plotly.newPlot("chart1", [trace1], layout1)
   });
 };
-
-
-
 
 function showCityInfo(city) {
   // select state
@@ -293,13 +283,15 @@ function showCityInfo(city) {
 }
 
 function optionChanged(city) {
-  // buildCharts(city); 
-  showCityInfo(city); 
+  // showCityInfo(city); 
 }
-
 
 function init() {
-  updateCityDropDown('TX')
+  // updateCityDropDown('TX')
+  buildPie('TX')
+  buildCharts('TX')
 }
+
+
 
 init()
