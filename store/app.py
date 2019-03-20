@@ -46,10 +46,14 @@ def cities(state_abbr):
 @app.route("/api/city_data/<state_abbr>")
 def density_by_city_by_state(state_abbr):
 
-    SQLStmt = """SELECT c.city, c.lat, c.lon, c.state, c.state_abbr, c.density, cd.population, cd.median_age, cd.average_household_size, cd.median_income FROM city c INNER JOIN city_demographics cd ON c.state_abbr = cd.state_abbr AND UPPER(c.city) = cd.city;"""
+    SQLStmt = f"""SELECT c.city, c.lat, c.lon, c.state, c.state_abbr, c.density, cd.population, cd.median_age, cd.average_household_size, cd.median_income 
+    FROM city c 
+    INNER JOIN city_demographics cd 
+    ON c.state_abbr = cd.state_abbr AND UPPER(c.city) = cd.city
+    AND c.state_abbr = '{state_abbr}';"""
     print(SQLStmt)
     results = db.engine.execute(SQLStmt)
-    print(results)
+    
     city_data = [{
         "city": result[0]
         , "location": [result[1], result[2]]
@@ -61,7 +65,7 @@ def density_by_city_by_state(state_abbr):
         , "average_household_size": result[8]
         , "median_income": result[9]
     } for result in results]
-    print(city_data)
+    # print(city_data)
     return jsonify(city_data)
 
 @app.route("/api/demographics/<state_abbr>")
