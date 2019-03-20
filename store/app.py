@@ -18,7 +18,6 @@ app = Flask(__name__)
 
 from flask_sqlalchemy import SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '') or "sqlite:///db.sqlite"
-# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '')
 db = SQLAlchemy(app)
 
 from .models import City, City_Demo, State_Demo
@@ -65,36 +64,8 @@ def density_by_city_by_state(state_abbr):
         , "average_household_size": result[8]
         , "median_income": result[9]
     } for result in results]
-    # print(city_data)
+    
     return jsonify(city_data)
-
-# @app.route("/api/demographics/<state_abbr>")
-# def city_demo(state_abbr):
-#     print(state_abbr)
-#     sel = [
-#         City_Demo.city
-#         , City_Demo.state
-#         , City_Demo.state_abbr
-#         , City_Demo.population
-#         , City_Demo.median_age
-#         , City_Demo.average_household_size
-#         , City_Demo.median_income
-#     ]
-
-#     results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).all()
-
-#     print(results)
-#     city_demographics = [{
-#         'city': result.city
-#         , 'state': result.state
-#         , "state_abbr": result.state_abbr
-#         , "population": result.population
-#         , "median_age": result.median_age
-#         , "median_income": result.median_income
-#     } for result in results]
-
-#     print(city_demographics)
-#     return jsonify(city_demographics)
 
 @app.route("/api/demographics/<state_abbr>")
 def state_demo(state_abbr):
@@ -127,14 +98,23 @@ def state_demo(state_abbr):
 
 @app.route("/api/plot/<state_abbr>")
 def plot(state_abbr):
-    sel = [
-        City_Demo.city
-        , City_Demo.state_abbr
-        , City_Demo.median_age
-        , City_Demo.median_income
-    ]
-    results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).all()
+    # sel = [
+    #     City_Demo.city
+    #     , City_Demo.state_abbr
+    #     , City_Demo.median_age
+    #     , City_Demo.median_income
+    # ]
+    # results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).all()
     
+    SQLStmt = f"""SELECT c.city, c.state_abbr, cd.median_age, cd.median_income 
+    FROM city c 
+    INNER JOIN city_demographics cd 
+    ON c.state_abbr = cd.state_abbr AND UPPER(c.city) = cd.city
+    AND c.state_abbr = '{state_abbr}'
+    ORDER BY cd.median_income ASC;"""
+
+    results = db.engine.execute(SQLStmt)
+        
     cities = []
     med_age = []
     med_income = []
@@ -155,20 +135,20 @@ def plot(state_abbr):
 
 @app.route("/api/pie/<state_abbr>")
 def pie(state_abbr):
-    # print(state_abbr)
-    sel = [
-        City.city
-        , City.state_abbr
-        , City.density
-    ]
-    results = db.session.query(*sel).filter(City.state_abbr == state_abbr).order_by(City.density.desc()).all()
+    SQLStmt = f"""SELECT c.city, c.state_abbr, c.density
+    FROM city c 
+    INNER JOIN city_demographics cd 
+    ON c.state_abbr = cd.state_abbr AND UPPER(c.city) = cd.city
+    AND c.state_abbr = '{state_abbr}'
+    ORDER BY c.density DESC
+    LIMIT 10;"""
 
-    top_10 = results[0:10]
+    results = db.engine.execute(SQLStmt)
 
     cities = []
     density = []
      
-    for city in top_10:
+    for city in results:
         cities.append(city[0])
         density.append(city[2]/2.56)
 

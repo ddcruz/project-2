@@ -52,7 +52,6 @@ function style(feature) {
 }
 
 function highlightFeature(e) {
-  // console.log('mouseover: highlightFeature')
   var layer = e.target;
 
   layer.setStyle({
@@ -73,14 +72,13 @@ function highlightFeature(e) {
 var geojson;
 
 function resetHighlight(e) {
-  // console.log('mouseout: resetHighlight')
     geojson.resetStyle(e.target);
     info.update();
 }
 
 function zoomToFeature(e) {
     map.fitBounds(e.target.getBounds());
-    updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
+    // updateCityDropDown(e.sourceTarget.feature.properties.state_abbr)
     drawCircles(e.sourceTarget.feature.properties.state_abbr) 
     buildCharts(e.sourceTarget.feature.properties.state_abbr)
     buildPie(e.sourceTarget.feature.properties.state_abbr)
@@ -132,6 +130,11 @@ function drawCircles(state_abbr) {
   //remove any previously added circles
   circlesGroup.clearLayers()
 
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  
+
   /* data route*/
   d3.json(`/api/city_data/${state_abbr}`).then(function(cities) {
 
@@ -145,17 +148,17 @@ function drawCircles(state_abbr) {
         , fillColor: getColor(city.density)
         , radius: city.density
       })
-      .bindPopup(city.city + ", " + city.state_abbr + 
+      .bindPopup("<b>" + city.city + ", " + city.state_abbr + "</b>" +
         "<br>" + 
         "<strong>Pop. Density: </strong>" + city.density.toFixed(2) + " people / mi<sup>2</sup>" +
         "<br>" +
-        "<strong>Pop.: </strong>" + city.population +
+        "<strong>Pop.: </strong>" + numberWithCommas(city.population) +
         "<br>" +
         "<strong>Median Age: </strong>" + city.median_age +
         "<br>" +
         "<strong>Avg. Household Size: </strong>" + city.average_household_size +
         "<br>" +
-        "<strong>Median Income: </strong>" + city.median_income
+        "<strong>Median Income: </strong>$" + numberWithCommas(city.median_income)
       )
       .addTo(circlesGroup);
     }
@@ -163,35 +166,32 @@ function drawCircles(state_abbr) {
   });
 }
 
-function updateCityDropDown(state_abbr) {
-  //update the state label
-  d3.select('#stateDropDownLabel').select('h5').text(`Select a city in ${state_abbr} from the list below:`)
-  d3.select('#stateDropDownLabel').select('h4').text(`${state_abbr}`)
+// function updateCityDropDown(state_abbr) {
+//   //update the state label
+//   d3.select('#stateDropDownLabel').select('h5').text(`Select a city in ${state_abbr} from the list below:`)
+//   d3.select('#stateDropDownLabel').select('h4').text(`${state_abbr}`)
 
-  // Grab a reference to the dropdown select element
-  var selector = d3.select("#cityselector");
+//   // Grab a reference to the dropdown select element
+//   var selector = d3.select("#cityselector");
 
-  //clear any previous dropdown values
-  selector.selectAll('option').remove()
+//   //clear any previous dropdown values
+//   selector.selectAll('option').remove()
   
-  // Use the list of sample names to populate the select options
-  d3.json(`api/city_list/${state_abbr}`).then((cities) => {
-    cities.forEach((city) => {
-      selector
-        .append("option")
-        .text(city.city)
-        .property("value", city.city);
-    });
+//   // Use the list of sample names to populate the select options
+//   d3.json(`api/city_list/${state_abbr}`).then((cities) => {
+//     cities.forEach((city) => {
+//       selector
+//         .append("option")
+//         .text(city.city)
+//         .property("value", city.city);
+//     });
 
-    // Use the first city from the list to build the initial plots
-    optionChanged(cities[0].city); 
-  });
-}
-
+//     // Use the first city from the list to build the initial plots
+//     optionChanged(cities[0].city); 
+//   });
+// }
 
 function buildCharts(state_abbr) {
-  // var state_abbr = d3.select('#stateDropDownLabel').select('h4').text()
-
   var url = `/api/plot/${state_abbr}`
 
   d3.json(url).then(data=> {
@@ -202,13 +202,13 @@ function buildCharts(state_abbr) {
       'text': data.cities,
       'mode': 'markers',
       'marker': {
-        // size: data.med_age,
+        size: data.med_income/10000,
         // color: 'blue'
       }
     };
     var layout1 = {
         title: {
-          text:`${state_abbr} Median Age vs Median Income`,
+          text:`Median Age vs Median Income for ${state_abbr}`,
           font: {
             size: 24
           }
@@ -231,7 +231,6 @@ function buildCharts(state_abbr) {
 };
 
 function buildPie(state_abbr) {
-  // console.log(`build pie for ${state_abbr}`)
   var url = `/api/pie/${state_abbr}`
 
   d3.json(url).then(data=> {
@@ -242,7 +241,7 @@ function buildPie(state_abbr) {
     };
     var layout1 = {
         title: {
-          text:`<b>${state_abbr} Top 10 cities by population density per m<sup>2</sup></b>`,
+          text:`<b>Top 10 cities in ${state_abbr} by population density (people / m<sup>2</sup></b>)`,
           font: {
             size: 14
           }
@@ -253,30 +252,6 @@ function buildPie(state_abbr) {
       Plotly.newPlot("chart1", [trace1], layout1)
   });
 };
-
-// function getCityInfo(state_abbr) {
-//   var url = `/api/demographics/${state_abbr}`
-
-//   d3.json(url).then(data=> {
-//     var sortedData = {
-//         population: data.population, 
-//         median_age: data.median_age,
-//         average_household_size: data.average_household_size,
-//         median_income: data.median_income,
-//       }
-    
-//     // reformat keys: replace "_" with " " + capitalize first letter of each word
-//     function formatText(string) {
-//       var correctText = string.replace(/_/g,' ').split(' ').map(x=> x.charAt(0).toUpperCase() + x.slice(1)).join(' ')
-//       return correctText
-//     }
-
-//     Object.entries(sortedData).forEach(([key, value])=> {
-//       var p = select_city.append("p")
-//       p.text(`${formatText(key)}: ${value}`)
-//     })
-//   })
-// }
 
 function init() {
   buildPie('TX')
