@@ -145,7 +145,18 @@ function drawCircles(state_abbr) {
         , fillColor: getColor(city.density)
         , radius: city.density
       })
-      .bindPopup(city.city + ", " + city.state_abbr +  ":   " + city.density + " people / mi<sup>2</sup>")
+      .bindPopup(city.city + ", " + city.state_abbr + 
+        "<br>" + 
+        "<strong>Pop. Density: </strong>" + city.density.toFixed(2) + " people / mi<sup>2</sup>" +
+        "<br>" +
+        "<strong>Pop.: </strong>" + city.population +
+        "<br>" +
+        "<strong>Median Age: </strong>" + city.median_age +
+        "<br>" +
+        "<strong>Avg. Household Size: </strong>" + city.average_household_size +
+        "<br>" +
+        "<strong>Median Income: </strong>" + city.median_income
+      )
       .addTo(circlesGroup);
     }
     map.addLayer(circlesGroup)

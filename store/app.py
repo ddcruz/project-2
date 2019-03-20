@@ -68,61 +68,61 @@ def density_by_city_by_state(state_abbr):
     # print(city_data)
     return jsonify(city_data)
 
-@app.route("/api/demographics/<state_abbr>")
-def city_demo(state_abbr):
-    print(state_abbr)
-    sel = [
-        City_Demo.city
-        , City_Demo.state
-        , City_Demo.state_abbr
-        , City_Demo.population
-        , City_Demo.median_age
-        , City_Demo.average_household_size
-        , City_Demo.median_income
-    ]
-
-    results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).all()
-
-    print(results)
-    city_demographics = [{
-        'city': result.city
-        , 'state': result.state
-        , "state_abbr": result.state_abbr
-        , "population": result.population
-        , "median_age": result.median_age
-        , "median_income": result.median_income
-    } for result in results]
-
-    print(city_demographics)
-    return jsonify(city_demographics)
-
 # @app.route("/api/demographics/<state_abbr>")
-# def state_demo(state_abbr):
+# def city_demo(state_abbr):
+#     print(state_abbr)
 #     sel = [
-#         State_Demo.city
-#         , State_Demo.state
-#         , State_Demo.state_abbr
-#         , State_Demo.population
-#         , State_Demo.median_age
-#         , State_Demo.average_household_size
-#         , State_Demo.median_income
-#         , State_Demo.household_income
-#         , State_Demo.per_capita_income
+#         City_Demo.city
+#         , City_Demo.state
+#         , City_Demo.state_abbr
+#         , City_Demo.population
+#         , City_Demo.median_age
+#         , City_Demo.average_household_size
+#         , City_Demo.median_income
 #     ]
-#     results = db.session.query(*sel).filter(State_Demo.state_abbr == state_abbr).all()
 
-#     state_demographics = {
-#         "state": results[0][1],
-#         # "state_abbr": results[0][2],
-#         "population": results[0][3],
-#         "median_age": results[0][4],
-#         "avgerage_household_size": results[0][5],
-#         "median_income": results[0][6],
-#         "household_income": results[0][7],
-#         "per_capita_income": results[0][8]
-#     }
+#     results = db.session.query(*sel).filter(City_Demo.state_abbr == state_abbr).all()
 
-#     return jsonify(state_demographics)
+#     print(results)
+#     city_demographics = [{
+#         'city': result.city
+#         , 'state': result.state
+#         , "state_abbr": result.state_abbr
+#         , "population": result.population
+#         , "median_age": result.median_age
+#         , "median_income": result.median_income
+#     } for result in results]
+
+#     print(city_demographics)
+#     return jsonify(city_demographics)
+
+@app.route("/api/demographics/<state_abbr>")
+def state_demo(state_abbr):
+    sel = [
+        State_Demo.city
+        , State_Demo.state
+        , State_Demo.state_abbr
+        , State_Demo.population
+        , State_Demo.median_age
+        , State_Demo.average_household_size
+        , State_Demo.median_income
+        , State_Demo.household_income
+        , State_Demo.per_capita_income
+    ]
+    results = db.session.query(*sel).filter(State_Demo.state_abbr == state_abbr).all()
+
+    state_demographics = {
+        "state": results[0][1],
+        # "state_abbr": results[0][2],
+        "population": results[0][3],
+        "median_age": results[0][4],
+        "avgerage_household_size": results[0][5],
+        "median_income": results[0][6],
+        "household_income": results[0][7],
+        "per_capita_income": results[0][8]
+    }
+
+    return jsonify(state_demographics)
 
 
 @app.route("/api/plot/<state_abbr>")
