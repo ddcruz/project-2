@@ -132,9 +132,8 @@ function drawCircles(state_abbr) {
   //remove any previously added circles
   circlesGroup.clearLayers()
 
-  /* data route */
-  var url = `/api/city_data/${state_abbr}`;
-  d3.json(url).then(function(cities) {
+  /* data route*/
+  d3.json(`/api/city_data/${state_abbr}`).then(function(cities) {
 
     // Loop through the cities data and create a circle for each store, 
     // and use the density for the radius
@@ -244,54 +243,33 @@ function buildPie(state_abbr) {
   });
 };
 
-function showCityInfo(city) {
-  // select state
-  var state_abbr = d3.select('#stateDropDownLabel').select('h4').text()
+// function getCityInfo(state_abbr) {
+//   var url = `/api/demographics/${state_abbr}`
 
-  var url = `/api/demographics/${state_abbr}/${city}`
-
-  var select_city = d3.select("#city-data")
-
-  select_city.html("")
-
-  d3.json(url).then(data=> {
-    // console.log(data)
-    var sortedData = {
-        city: data.city,
-        state: data.state,
-        population: data.population, 
-        median_age: data.median_age,
-        avgerage_household_size: data.avgerage_household_size,
-        median_income: data.median_income,
-        household_income: data.household_income,
-        per_capita_income: data.per_capita_income
-      }
+//   d3.json(url).then(data=> {
+//     var sortedData = {
+//         population: data.population, 
+//         median_age: data.median_age,
+//         average_household_size: data.average_household_size,
+//         median_income: data.median_income,
+//       }
     
-    // reformat keys: replace "_" with " " + capitalize first letter of each word
-    function formatText(string) {
-      var correctText = string.replace(/_/g,' ').split(' ').map(x=> x.charAt(0).toUpperCase() + x.slice(1)).join(' ')
-      return correctText
-    }
+//     // reformat keys: replace "_" with " " + capitalize first letter of each word
+//     function formatText(string) {
+//       var correctText = string.replace(/_/g,' ').split(' ').map(x=> x.charAt(0).toUpperCase() + x.slice(1)).join(' ')
+//       return correctText
+//     }
 
-
-    Object.entries(sortedData).forEach(([key, value])=> {
-      var p = select_city.append("p")
-      p.text(`${formatText(key)}: ${value}`)
-    })
-  })
-
-}
-
-function optionChanged(city) {
-  // showCityInfo(city); 
-}
+//     Object.entries(sortedData).forEach(([key, value])=> {
+//       var p = select_city.append("p")
+//       p.text(`${formatText(key)}: ${value}`)
+//     })
+//   })
+// }
 
 function init() {
-  // updateCityDropDown('TX')
   buildPie('TX')
   buildCharts('TX')
 }
-
-
 
 init()
