@@ -1,5 +1,3 @@
-host = '0.0.0.0'
-# port = process.env.PORT or 3000
 
 # import necessary libraries
 import os
@@ -21,6 +19,9 @@ app = Flask(__name__)
 
 from flask_sqlalchemy import SQLAlchemy
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '') or "sqlite:///db.sqlite"
+host = '0.0.0.0'
+port = int(os.environ.get('PORT', 33507))
+
 db = SQLAlchemy(app)
 
 from .models import City, City_Demo, State_Demo
@@ -155,5 +156,5 @@ def pie(state_abbr):
     return jsonify(results_json)
 
 # if __name__ == "__main__":
-app.run(debug=True)
-# app.run(host=host)
+# app.run(debug=True)
+app.run(host=host, port=port, debug=True)
