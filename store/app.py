@@ -1,3 +1,6 @@
+host = '0.0.0.0'
+# port = process.env.PORT or 3000
+
 # import necessary libraries
 import os
 from flask import (
@@ -152,4 +155,5 @@ def pie(state_abbr):
     return jsonify(results_json)
 
 # if __name__ == "__main__":
-app.run(debug=True)
+# app.run(debug=True)
+app.run(host=host)
