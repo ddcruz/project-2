@@ -38,8 +38,8 @@ info.onAdd = function (map) {
   return this._div;
 };
 
-info.update = function (props) {
-  this._div.innerHTML = '<h4>US Population Density</h4>' +  (props ?
+info.update = function (props, type) {
+  this._div.innerHTML = '<h4>US Population Density</h4>' +  (type === 'state' ?
     '<b>' + props.name + '</b><br />' + props.density + ' people / mi<sup>2</sup>'
     : 'Hover over a state');
 };
@@ -85,8 +85,8 @@ function highlightFeature(e) {
   var layer = e.target;
 
   layer.setStyle({
-    weight: 5,
-    color: '#666',
+    weight: 4,
+    color: 'tan',
     dashArray: '',
     fillOpacity: 0.7
   });
@@ -95,8 +95,10 @@ function highlightFeature(e) {
     layer.bringToFront();
   }
 
-  info.update(layer.feature.properties);
-  circlesGroup.bringToFront();
+  info.update(layer.feature.properties, 'state');
+  if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+    circlesGroup.bringToFront();
+  }  
 }
 
 var geojson;
@@ -171,24 +173,30 @@ function drawCircles(state_abbr) {
     // and use the density as the radius of the circle and the color gradient
     for (var i = 0; i < cities.length; i++) {
       var city = cities[i];
+
+      var customPopup = "<b>" + city.city + ", " + city.state_abbr + "</b>" +
+      "<br>" + 
+      "<strong>Pop. Density: </strong>" + numberWithCommas(city.density.toFixed(2)) + " people / mi<sup>2</sup>" +
+      "<br>" +
+      "<strong>Pop.: </strong>" + numberWithCommas(city.population) +
+      "<br>" +
+      "<strong>Median Age: </strong>" + city.median_age +
+      "<br>" +
+      "<strong>Avg. Household Size: </strong>" + city.average_household_size +
+      "<br>" +
+      "<strong>Median Income: </strong>$" + numberWithCommas(city.median_income)
+  
+      var customPopupOptions = {
+        'className': 'popupCustom'
+      }
+
       L.circle(city.location, {
         fillOpacity: 1
         , color: 'white'
         , fillColor: getColor(city.density)
         , radius: city.density
       })
-      .bindPopup("<b>" + city.city + ", " + city.state_abbr + "</b>" +
-        "<br>" + 
-        "<strong>Pop. Density: </strong>" + numberWithCommas(city.density.toFixed(2)) + " people / mi<sup>2</sup>" +
-        "<br>" +
-        "<strong>Pop.: </strong>" + numberWithCommas(city.population) +
-        "<br>" +
-        "<strong>Median Age: </strong>" + city.median_age +
-        "<br>" +
-        "<strong>Avg. Household Size: </strong>" + city.average_household_size +
-        "<br>" +
-        "<strong>Median Income: </strong>$" + numberWithCommas(city.median_income)
-      )
+      .bindPopup(customPopup, customPopupOptions)
       .addTo(circlesGroup);
     }
     map.addLayer(circlesGroup)

@@ -152,4 +152,4 @@ def pie(state_abbr):
     return jsonify(results_json)
 
 # if __name__ == "__main__":
-app.run(debug=True)
+app.run(debug=True, port=33509)

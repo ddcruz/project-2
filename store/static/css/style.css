@@ -19,7 +19,8 @@ html {
     height: 500px; 
 }
 
-.info { 
+.info, .popupCustom .leaflet-popup-tip,
+.popupCustom .leaflet-popup-content-wrapper { 
     padding: 6px 8px; 
     font: 14px/16px Arial, Helvetica, sans-serif; 
     background: white; 
@@ -50,4 +51,3 @@ html {
 h1, h3 {
     text-align: center;
 }
-
